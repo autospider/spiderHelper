@@ -215,7 +215,7 @@ export const asyncRoutes = [
         path: 'instructions',
         component: () => import('@/views/sign/instructions'),
         name: 'sign',
-        meta: { title: 'Instruction', roles: ['admin','editor'] }
+        meta: { title: '使用说明', roles: ['admin','editor'] }
       }
     ]
   },

@@ -656,6 +656,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 export default {
   data() {
     return {
+      activeName: 'first',
       parChildId:{},
       mothodOps:[{
         value: '选项1',
