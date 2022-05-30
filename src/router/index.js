@@ -74,14 +74,23 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/systemintr',
     children: [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
+        meta: { title: '首页', icon: 'dashboard', affix: true },
+        hidden: true
+      },
+      {
+        path: 'systemintr',
+        component: () => import('@/views/sign/index'),
+        name: 'sign',
+        meta: { icon: 'dashboard',  title: '项目介绍',
+          roles: ['admin','editor']}
+      },
+,
     ]
   }
 ]
@@ -97,6 +106,7 @@ export const asyncRoutes = [
     redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
     name: 'Permission',
+    hidden: true,
     meta: {
       title: 'Permission',
       icon: 'lock',
@@ -143,7 +153,7 @@ export const asyncRoutes = [
     redirect: '/tinymce/spiderTest',
     name: 'spider',
     meta: {
-      title: '爬虫',
+      title: '爬虫管理',
       icon: 'bug',
       // noCache: false
     },
@@ -184,22 +194,23 @@ export const asyncRoutes = [
   {
     path: '/sign',
     component: Layout,
-    redirect: '/sign/index',
-    alwaysShow: true,
+    redirect: '/sign/instructions',
+    // alwaysShow: true,
     name: '文档说明',
     meta: {
-      title: 'Documentation',
+      title: '使用说明',
       icon: 'documentation',
       roles: ['admin','editor'] // you can set roles in root nav
     },
     children: [
-      {
-        path: 'index',
-        component: () => import('@/views/sign/index'),
-        name: 'sign',
-        meta: {   title: 'Introduction',
-          roles: ['admin','editor']}
-      },
+      // {
+      //   path: 'index',
+      //   component: () => import('@/views/sign/index'),
+      //   name: 'sign',
+      //   hidden: true,
+      //   meta: {   title: 'Introduction',
+      //     roles: ['admin','editor']}
+      // },
       {
         path: 'instructions',
         component: () => import('@/views/sign/instructions'),

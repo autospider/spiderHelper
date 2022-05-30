@@ -11,7 +11,7 @@ function resolve(dir) {
 }
 
 const name = defaultSettings.title || 'vue Element Admin' // page title
-const publicPath = '/vue2-element/'
+const publicPath = './'
 const outputDir = 'dist'
 const assetsDir = 'static'
 

@@ -558,7 +558,7 @@
           <el-table-column v-for="(col, idx) in columnList" :key="col.prop" :index="idx">
             <!-- 自定义表头的内容 -->
             <template #header>
-              <p v-show="col.show" @dblclick="col.show = false">
+              <p v-show="col.show" @dblclick="col.show = false" style="padding: 0px 15px">
                 {{ col.label }}
               </p>
               <el-input
@@ -570,9 +570,32 @@
             </template>
             <!-- 自定义列的内容-->
             <template #default="scope">
-              <p v-show="scope.row[col.prop].show" @dblclick="scope.row[col.prop].show = false">
+              <el-select v-show="scope.row[col.prop].show" v-if="scope.row.name.content=='encoding'&&col.prop=='value'"
+                         v-model="scope.row[col.prop].content" placeholder="请选择">
+                <el-option
+                  v-for="item in encodeOps"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.label"
+                >
+                </el-option>
+              </el-select>
+              <el-select v-show="scope.row[col.prop].show" v-else-if="scope.row.name.content=='resource'&&col.prop=='value'"
+                         v-model="scope.row[col.prop].content" placeholder="请选择">
+                <el-option
+                  v-for="item in resourceOps"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.label"
+                >
+                </el-option>
+              </el-select>
+
+
+              <p v-else v-show="scope.row[col.prop].show" @dblclick="scope.row[col.prop].show = false" style="padding: 0px 15px">
                 {{ scope.row[col.prop].content }}
-                <i class="el-icon-edit-outline" @click="scope.row[col.prop].show=false" />
+<!--                <i v-if="col.prop=='值'" class="el-icon-edit-outline" @click="scope.row[col.prop].show=false" />-->
+                <i  v-if="col.prop=='value'" class="el-icon-edit-outline" @click="editColumn({row:scope.row,col:col})" />
               </p>
               <el-input
                 v-show="!scope.row[col.prop].show"
@@ -584,7 +607,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <p style="text-align:left;color:#ccc;">右键菜单，双击编辑</p>
+<!--        <p style="text-align:left;color:#ccc;">右键菜单，双击编辑</p>-->
 
 <!--        <div v-if="checkPermission(['admin'])">-->
 <!--          <h3 style="text-align:center;">实时数据展示</h3>-->
@@ -601,26 +624,26 @@
 <!--        </div>-->
 
         <!-- 表头右键菜单 -->
-        <div v-show="showMenu" id="contextmenu">
-          <i class="el-icon-circle-close hideContextMenu" @click="showMenu=false" />
-          <!--          <el-button size="mini" type="primary" @click="addColumn()">前方插入一列</el-button>-->
-          <!--          <el-button size="mini" type="primary" @click="addColumn(true)">后方插入一列</el-button>-->
-          <!--          <el-popconfirm title="确定删除该列吗？" @confirm="delColumn">-->
-          <!--            <template #reference>-->
-          <!--              <el-button type="primary" size="mini">删除当前列</el-button>-->
-          <!--            </template>-->
-          <!--          </el-popconfirm>-->
-          <div v-show="!curTarget.isHead">
-            <hr>
-            <!--            <el-button size="mini" type="primary" @click="addRow()">上方插入一行</el-button>-->
-            <el-button size="mini" type="primary" style="width: 100px" @click="addRow(true)">下方插入一行</el-button>
-            <el-popconfirm title="确定删除该行吗？" @confirm="delRow">
-              <template #reference>
-                <el-button type="primary" size="mini" style="width: 100px">删除当前行</el-button>
-              </template>
-            </el-popconfirm>
-          </div>
-        </div>
+<!--        <div v-show="showMenu" id="contextmenu">-->
+<!--          <i class="el-icon-circle-close hideContextMenu" @click="showMenu=false" />-->
+<!--          &lt;!&ndash;          <el-button size="mini" type="primary" @click="addColumn()">前方插入一列</el-button>&ndash;&gt;-->
+<!--          &lt;!&ndash;          <el-button size="mini" type="primary" @click="addColumn(true)">后方插入一列</el-button>&ndash;&gt;-->
+<!--          &lt;!&ndash;          <el-popconfirm title="确定删除该列吗？" @confirm="delColumn">&ndash;&gt;-->
+<!--          &lt;!&ndash;            <template #reference>&ndash;&gt;-->
+<!--          &lt;!&ndash;              <el-button type="primary" size="mini">删除当前列</el-button>&ndash;&gt;-->
+<!--          &lt;!&ndash;            </template>&ndash;&gt;-->
+<!--          &lt;!&ndash;          </el-popconfirm>&ndash;&gt;-->
+<!--          <div v-show="!curTarget.isHead">-->
+<!--            <hr>-->
+<!--            &lt;!&ndash;            <el-button size="mini" type="primary" @click="addRow()">上方插入一行</el-button>&ndash;&gt;-->
+<!--            <el-button size="mini" type="primary" style="width: 100px" @click="addRow(true)">下方插入一行</el-button>-->
+<!--            <el-popconfirm title="确定删除该行吗？" @confirm="delRow">-->
+<!--              <template #reference>-->
+<!--                <el-button type="primary" size="mini" style="width: 100px">删除当前行</el-button>-->
+<!--              </template>-->
+<!--            </el-popconfirm>-->
+<!--          </div>-->
+<!--        </div>-->
       </el-tab-pane>
 
     </el-tabs>
@@ -647,6 +670,13 @@ export default {
       }, {
         value: '选项2',
         label: 'utf8'
+      }],
+      resourceOps:[{
+        value: '选项1',
+        label: 'proxy'
+      }, {
+        value: '选项2',
+        label: 'null'
       }],
       dateTypeOps:[{
         value: '选项1',
@@ -686,14 +716,55 @@ export default {
 
       ],
       testDatas: [{
-        name: { content: '', show: true },
+        name: { content: 'taskName', show: true },
         value: { content: '', show: true }
       },
-      //   {
-      //   name: { content: '', show: true },
-      //   value: { content: '', show: true }
-      //
-      // }
+        {
+        name: { content: 'taskGroup', show: true },
+        value: { content: '', show: true }
+
+      },
+        {
+        name: { content: 'taskKey', show: true },
+        value: { content: '', show: true }
+
+      }, {
+        name: { content: 'resource', show: true },
+        value: { content: '', show: true }
+
+      },{
+        name: { content: 'resourceKey', show: true },
+        value: { content: '', show: true }
+
+      },{
+        name: { content: 'encoding', show: true },
+        value: { content: '', show: true }
+
+      },{
+        name: { content: 'interval', show: true },
+        value: { content: '', show: true }
+
+      },{
+          name: { content: 'concurrency', show: true },
+          value: { content: '', show: true }
+
+      },{
+          name: { content: 'timeout', show: true },
+          value: { content: '', show: true }
+
+      },{
+          name: { content: 'retryTimes', show: true },
+          value: { content: '', show: true }
+
+      },{
+          name: { content: 'flag', show: true },
+          value: { content: '', show: true }
+
+      },{
+          name: { content: 'retryCode', show: true },
+          value: { content: '', show: true }
+
+      },
       ],
       entrance: [{
         name: { content: 'task', show: true },
@@ -1559,7 +1630,11 @@ export default {
   },
   methods: {
     checkPermission,
-
+    editColumn(data){
+      console.log('列：',data.col.prop)
+      console.log(this.testDatas)
+      data[data.col.prop].show=false
+    },
     getConfigFile(){
       const configFile = {}
       const  settingData = this.senderData
@@ -1878,7 +1953,8 @@ export default {
       let data = JSON.stringify(configFile);
       // console.log('entrance:',this.entranceData)
       let blob = new Blob([data], { type: "application/json" });
-      FileSaver.saveAs(blob, `configFile.json`);
+      // FileSaver.saveAs(blob, `configFile.json`);
+      console.log(configFile)
     },
     isNotEmptyStr(s) {
       if (typeof s == 'string' && s.length > 0) {
