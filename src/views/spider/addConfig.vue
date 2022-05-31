@@ -2183,6 +2183,7 @@ export default {
 
       // console.log('entranceData:',this.entranceData)
     },
+
     addColumnSender(tableDataItemKey) {
       // console.log('dddd:',tableDataItemKey)
       const column = { id: uuidv4() }
