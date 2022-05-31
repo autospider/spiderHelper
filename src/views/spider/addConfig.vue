@@ -1609,9 +1609,6 @@ export default {
                 value: '选项2',
                 label: 'html'
               }, {
-                value: '选项3',
-                label: 'range'
-              }, {
                 value: '选项4',
                 label: 'dom'
               }, {
@@ -1620,9 +1617,6 @@ export default {
               }, {
                 value: '选项6',
                 label: 'any'
-              }, {
-                value: '选项7',
-                label: 'list'
               }],
               edit: false
             },
@@ -2355,10 +2349,7 @@ export default {
               }, {
                 value: '选项2',
                 label: 'html'
-              }, {
-                value: '选项3',
-                label: 'range'
-              }, {
+              },  {
                 value: '选项4',
                 label: 'dom'
               }, {
@@ -2367,9 +2358,6 @@ export default {
               }, {
                 value: '选项6',
                 label: 'any'
-              }, {
-                value: '选项7',
-                label: 'list'
               }],value: '', edit: true }
           }
           else  if (this.tableHeader[i].prop=='next'){
@@ -2594,9 +2582,6 @@ export default {
                 value: '选项2',
                 label: 'html'
               }, {
-                value: '选项3',
-                label: 'range'
-              }, {
                 value: '选项4',
                 label: 'dom'
               }, {
@@ -2605,9 +2590,6 @@ export default {
               }, {
                 value: '选项6',
                 label: 'any'
-              }, {
-                value: '选项7',
-                label: 'list'
               }],value: '', edit: true }
           }
           else  if (this.tableHeader[i].prop=='next'){
@@ -2712,9 +2694,6 @@ export default {
                value: '选项2',
                label: 'html'
              }, {
-               value: '选项3',
-               label: 'range'
-             }, {
                value: '选项4',
                label: 'dom'
              }, {
@@ -2723,9 +2702,6 @@ export default {
              }, {
                value: '选项6',
                label: 'any'
-             }, {
-               value: '选项7',
-               label: 'list'
              }],value: '', edit: true }
          }
          else  if (this.tableHeader[i].prop=='next'){
@@ -2828,9 +2804,6 @@ export default {
                 value: '选项2',
                 label: 'html'
               }, {
-                value: '选项3',
-                label: 'range'
-              }, {
                 value: '选项4',
                 label: 'dom'
               }, {
@@ -2839,9 +2812,6 @@ export default {
               }, {
                 value: '选项6',
                 label: 'any'
-              }, {
-                value: '选项7',
-                label: 'list'
               }],value: '', edit: true }
           }
           else  if (this.tableHeader[i].prop=='next'){
@@ -2944,9 +2914,6 @@ export default {
               value: '选项2',
               label: 'html'
             }, {
-              value: '选项3',
-              label: 'range'
-            }, {
               value: '选项4',
               label: 'dom'
             }, {
@@ -2955,9 +2922,6 @@ export default {
             }, {
               value: '选项6',
               label: 'any'
-            }, {
-              value: '选项7',
-              label: 'list'
             }],value: '', edit: true }
         }
         else if (this.tableHeader[i].prop=='next'){
