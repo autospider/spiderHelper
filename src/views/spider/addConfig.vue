@@ -625,12 +625,20 @@
 <!--                <i v-if="col.prop=='值'" class="el-icon-edit-outline" @click="scope.row[col.prop].show=false" />-->
                 <i  v-if="col.prop=='value'" class="el-icon-edit-outline" @click="editColumn({row:scope.row,col:col})" />
               </p>
-              <el-input v-if="(scope.row.name.content=='interval'&&col.prop=='value')||(scope.row.name.content=='concurrency'&&col.prop=='value')||(scope.row.name.content=='timeout'&&col.prop=='value')||(scope.row.name.content=='retryTimes'&&col.prop=='value')||(scope.row.name.content=='flag'&&col.prop=='value')"
+              <el-input v-if="(scope.row.name.content=='retryCode'&&col.prop=='value')"
                 v-show="!scope.row[col.prop].show"
                 v-model="scope.row[col.prop].content"
                 type="textarea"
                 :autosize="{ minRows: 2, maxRows: 4 }"
                 @blur="scope.row[col.prop].show = true"
+                        oninput="value=value.replace(/[^\d.,]/g,'')"
+              />
+              <el-input v-else-if="(scope.row.name.content=='interval'&&col.prop=='value')||(scope.row.name.content=='concurrency'&&col.prop=='value')||(scope.row.name.content=='timeout'&&col.prop=='value')||(scope.row.name.content=='retryTimes'&&col.prop=='value')||(scope.row.name.content=='flag'&&col.prop=='value')"
+                        v-show="!scope.row[col.prop].show"
+                        v-model="scope.row[col.prop].content"
+                        type="textarea"
+                        :autosize="{ minRows: 2, maxRows: 4 }"
+                        @blur="scope.row[col.prop].show = true"
                         oninput="value=value.replace(/[^\d.]/g,'')"
               />
               <el-input
@@ -693,7 +701,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 export default {
   data() {
     return {
-      activeValue:'',
+      activeValue:'请选择',
       activeName: 'first',
       parChildId:{},
       mothodOps:[{
@@ -1933,15 +1941,34 @@ export default {
       //setting
       for (let i = 0; i < this.testDatas.length; i++) {
           if(this.isNotEmptyStr(this.testDatas[i].name.content.toString().trim())==true){
-            if(this.testDatas[i].name.content=='interval'||this.testDatas[i].name.content=='concurrency'||this.testDatas[i].name.content=='timeout'||this.testDatas[i].name.content=='retryTimes'||this.testDatas[i].name.content=='flag'){
+            if(this.testDatas[i].name.content=='interval'||this.testDatas[i].name.content=='concurrency'||this.testDatas[i].name.content=='timeout'||this.testDatas[i].name.content=='flag'||this.testDatas[i].name.content=='retryTimes'){
               const key = this.testDatas[i].name.content
-              const value = parseFloat(this.testDatas[i].value.content)
-              configFile[key]=value
+              // const value = parseFloat(this.testDatas[i].value.content)
+              const value = this.testDatas[i].value.content
+              if(this.isNotEmptyStr(value)){
+                configFile[key]=parseFloat(value)
+              }
+
+            }
+            else if(this.testDatas[i].name.content=='retryCode'){
+              const key = this.testDatas[i].name.content
+              // const value = parseFloat(this.testDatas[i].value.content)
+              const value = this.testDatas[i].value.content
+              if(value.indexOf(',')!=-1){
+                configFile[key]=value.split(',').map(Number)
+              }
+              else{
+                configFile[key]=parseFloat(value)
+              }
+              // console.log(this.testDatas[i].name.content,':',this.testDatas[i].value.content)
             }
             else {
               const key = this.testDatas[i].name.content
               const value = this.testDatas[i].value.content
-              configFile[key]=value
+              if(this.isNotEmptyStr(value)){
+                configFile[key]=value
+              }
+
             }
           }
       }
@@ -1997,7 +2024,7 @@ export default {
       // console.log('entrance:',this.entranceData)
       let blob = new Blob([data], { type: "application/json" });
       FileSaver.saveAs(blob, `configFile.json`);
-      console.log(configFile)
+      // console.log(configFile)
     },
     isNotEmptyStr(s) {
       if (typeof s == 'string' && s.length > 0) {
@@ -3032,11 +3059,12 @@ export default {
             if(this.senderData[i].tableData[j].id==currentItemId){
               if(typeValue=='store'){
                 this.senderData[i].tableData[j].targetType.key=storeArry
-                this.activeValue='bson'
+                this.senderData[i].tableData[j].targetType.value='bson'
+                // this.activeValue='bson'
               }
               else{
                 this.senderData[i].tableData[j].targetType.key=reqArry
-                this.activeValue='dom'
+                this.senderData[i].tableData[j].targetType.value='dom'
               }
 
             }
@@ -3045,7 +3073,13 @@ export default {
 
         }
       }
-      console.log(data)
+      // if(typeValue=='store'){
+      //   this.activeValue='bson'
+      // }
+      // else{
+      //   this.activeValue='dom'
+      // }
+      // console.log(data)
     },
     subColumnN(tableDataItemKey, tableDataId) {
       console.log(tableDataItemKey, tableDataId)
