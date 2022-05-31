@@ -2002,7 +2002,7 @@ export default {
       let data = JSON.stringify(configFile);
       // console.log('entrance:',this.entranceData)
       let blob = new Blob([data], { type: "application/json" });
-      // FileSaver.saveAs(blob, `configFile.json`);
+      FileSaver.saveAs(blob, `configFile.json`);
       console.log(configFile)
     },
     isNotEmptyStr(s) {
