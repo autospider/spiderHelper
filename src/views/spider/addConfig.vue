@@ -1632,8 +1632,6 @@ export default {
   methods: {
     checkPermission,
     editColumn(data){
-      console.log('列：',data.col.prop)
-      console.log(this.testDatas)
       data[data.col.prop].show=false
     },
     getConfigFile(){
@@ -1954,8 +1952,8 @@ export default {
       let data = JSON.stringify(configFile);
       // console.log('entrance:',this.entranceData)
       let blob = new Blob([data], { type: "application/json" });
-      // FileSaver.saveAs(blob, `configFile.json`);
-      console.log(configFile)
+      FileSaver.saveAs(blob, `configFile.json`);
+      // console.log(configFile)
     },
     isNotEmptyStr(s) {
       if (typeof s == 'string' && s.length > 0) {
@@ -2251,7 +2249,6 @@ export default {
         const eachtableDataId = tableData.row.id
         const tableDataItemKey = tableData.tableKey
         for (let i = 0; i < this.tableHeader.length; i++) {
-          console.log('prop：',this.tableHeader[i].prop)
           if (this.tableHeader[i].prop=='parseType'){
             column[this.tableHeader[i].prop] = { key:[{
                 value: '选项1',
@@ -2337,7 +2334,6 @@ export default {
             column[this.tableHeader[i].prop] = { value: '', edit: true }
           }
         }
-        console.log('column:',column)
 
         for (let j = 0; j < this.tableDatas.length; j++) {
           if (this.tableDatas[j].key == tableDataItemKey) {
@@ -2414,7 +2410,6 @@ export default {
                   for (let l = 0; l < this.tableDatas[i].tableData[j].children[k].children.length; l++) {
                     if (this.tableDatas[i].tableData[j].children[k].children[l].id == secondChildId){
                       let delobj = this.tableDatas[i].tableData[j].children[k].children[l].children
-                     console.log(this.tableDatas[i].tableData[j].children[k].children[l].children)
                       for (let m = 0; m < this.tableDatas[i].tableData[j].children[k].children[l].children.length; m++) {
                         if ( this.tableDatas[i].tableData[j].children[k].children[l].children[m].id == currentChildId){
                           for (let n = 0; n < this.tableDatas[i].tableData[j].children[k].children[l].children[m].children.length; n++) {
@@ -2481,7 +2476,6 @@ export default {
     },
     addNextThird(dataObj){
 
-      console.log('parentsRow:',dataObj.tableDataRow,'data',dataObj.data,'currentRow',dataObj.currentRow)
       if (dataObj.currentRow.next.value==true){
         const column = { id: uuidv4(),children:[] }
         const tableDataItemId = dataObj.tableDataRow.id
@@ -2489,7 +2483,6 @@ export default {
         const currentChildId = dataObj.currentRow.id
         const tableDataItemKey = dataObj.key
         for (let i = 0; i < this.tableHeader.length; i++) {
-          console.log('prop：',this.tableHeader[i].prop)
           if (this.tableHeader[i].prop=='parseType'){
             column[this.tableHeader[i].prop] = { key:[{
                 value: '选项1',
@@ -2596,7 +2589,6 @@ export default {
     },
     addNextFourTh(dataObj){
 
-      console.log('parentsRow:',dataObj.tableDataRow,'data2:',dataObj.data2,'data3:',dataObj.data3,'currentRow:',dataObj.currentRow)
 
      if (dataObj.currentRow.next.value==true){
        const column = { id: uuidv4(),children:[] }
@@ -2607,7 +2599,6 @@ export default {
        // const currenChildName = dataObj.currentRow.name
        const tableDataItemKey = dataObj.key
        for (let i = 0; i < this.tableHeader.length; i++) {
-         console.log('prop：',this.tableHeader[i].prop)
          if (this.tableHeader[i].prop=='parseType'){
            column[this.tableHeader[i].prop] = { key:[{
                value: '选项1',
@@ -2961,13 +2952,10 @@ export default {
       console.log(data)
     },
     subColumnN(tableDataItemKey, tableDataId) {
-      console.log(tableDataItemKey, tableDataId)
       for (let i = 0; i < this.tableDatas.length; i++) {
         if (this.tableDatas[i].key == tableDataItemKey) {
           for (let j = 0; j < this.tableDatas[i].tableData.length; j++) {
             if (this.tableDatas[i].tableData[j].id == tableDataId && this.tableDatas[i].tableData.length > 1) {
-              console.log(this.tableDatas[i].tableData.length)
-              console.log(this.tableDatas[i].tableData)
               this.tableDatas[i].tableData.splice(j, 1)
             }
           }
