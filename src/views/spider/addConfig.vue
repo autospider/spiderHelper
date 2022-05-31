@@ -512,7 +512,7 @@
               </el-table-column>
               <el-table-column v-for="item in senderHeader" :key="item.key" :prop="item.prop" :label="item.label">
                 <template slot-scope="scope">
-                  <el-select v-model="scope.row[item.prop].value" placeholder="请选择"
+                  <el-select  @change="isMileageCardOrder" v-model="scope.row[item.prop].value" placeholder="请选择"
                              v-if="item.prop=='encoding'">
                     <el-option
                       v-for="it in scope.row[item.prop].key"
@@ -521,11 +521,39 @@
                       :value="it.label">
                     </el-option>
                   </el-select>
+                  <el-select  @change="changeType({typeValue:scope.row[item.prop].value,tableItemKey:tableDataItem.key,tableDataItem:tableDataItem.tableData,scope:scope.row})" v-model="scope.row[item.prop].value" placeholder="请选择"
+                              v-else-if="item.prop=='type'">
+                    <el-option
+                      v-for="it in scope.row[item.prop].key"
+                      :key="it.value"
+                      :label="it.label"
+                      :value="it.label">
+                    </el-option>
+                  </el-select>
+                  <el-select   v-model="scope.row[item.prop].value" :placeholder="activeValue"
+                              v-else-if="item.prop=='targetType'">
+                    <el-option
+                      v-for="it in scope.row[item.prop].key"
+                      :key="it.value"
+                      :label="it.label"
+                      :value="it.label">
+                    </el-option>
+                  </el-select>
+                  <el-select  @change="isMileageCardOrder" v-model="scope.row[item.prop].value" placeholder="请选择"
+                              v-else-if="item.prop=='type'">
+                    <el-option
+                      v-for="it in scope.row[item.prop].key"
+                      :key="it.value"
+                      :label="it.label"
+                      :value="it.label">
+                    </el-option>
+                  </el-select>
+
                   <el-input v-else v-show="scope.row[item.prop].edit" v-model="scope.row[item.prop].value"
                             placeholder="请输入内容" @blur="blueHandler(scope.row[item.prop])"/>
-                  <span v-show="!scope.row[item.prop].edit" v-if="item.prop!='encoding'">{{ scope.row[item.prop].value }}</span>
+                  <span v-show="!scope.row[item.prop].edit" v-if="item.prop!='encoding'&&item.prop!='targetType'&&item.prop!='type'">{{ scope.row[item.prop].value }}</span>
                   <i v-show="!scope.row[item.prop].edit" style="margin-left:10px" class="el-icon-edit"
-                     @click="editHandle(scope.row[item.prop])" v-if="item.prop!='encoding'"/>
+                     @click="editHandle(scope.row[item.prop])" v-if="item.prop!='encoding'&&item.prop!='targetType'&&item.prop!='type'"/>
                   <!--                  <i v-show="false" style="margin-left:10px" class="el-icon-edit" @click="editHandle(scope.row[item.prop])" v-if="item.prop=='parseType'" />-->
                 </template>
               </el-table-column>
@@ -597,7 +625,16 @@
 <!--                <i v-if="col.prop=='值'" class="el-icon-edit-outline" @click="scope.row[col.prop].show=false" />-->
                 <i  v-if="col.prop=='value'" class="el-icon-edit-outline" @click="editColumn({row:scope.row,col:col})" />
               </p>
+              <el-input v-if="(scope.row.name.content=='interval'&&col.prop=='value')||(scope.row.name.content=='concurrency'&&col.prop=='value')||(scope.row.name.content=='timeout'&&col.prop=='value')||(scope.row.name.content=='retryTimes'&&col.prop=='value')||(scope.row.name.content=='flag'&&col.prop=='value')"
+                v-show="!scope.row[col.prop].show"
+                v-model="scope.row[col.prop].content"
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                @blur="scope.row[col.prop].show = true"
+                        oninput="value=value.replace(/[^\d.]/g,'')"
+              />
               <el-input
+                v-else
                 v-show="!scope.row[col.prop].show"
                 v-model="scope.row[col.prop].content"
                 type="textarea"
@@ -656,6 +693,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 export default {
   data() {
     return {
+      activeValue:'',
       activeName: 'first',
       parChildId:{},
       mothodOps:[{
@@ -755,10 +793,6 @@ export default {
 
       },{
           name: { content: 'retryTimes', show: true },
-          value: { content: '', show: true }
-
-      },{
-          name: { content: 'flag', show: true },
           value: { content: '', show: true }
 
       },{
@@ -1073,13 +1107,20 @@ export default {
           key: 0,
           name: '',
           tableData: [{
-            id: 0,
+            id: 1,
             source: {
               value: '',
               edit: false
             },
             type: {
               value: '',
+              key: [{
+                value: '选项1',
+                label: 'store'
+              }, {
+                value: '选项2',
+                label: 'req'
+              }],
               edit: false
             },
             target: {
@@ -1099,6 +1140,13 @@ export default {
             },
             targetType: {
               value: '',
+              key: [{
+                value: '选项1',
+                label: 'csv'
+              }, {
+                value: '选项2',
+                label: 'bson'
+              }],
               edit: false
             },
             parameter: {
@@ -1632,6 +1680,8 @@ export default {
   methods: {
     checkPermission,
     editColumn(data){
+      console.log('列：',data.col.prop)
+      console.log(this.testDatas)
       data[data.col.prop].show=false
     },
     getConfigFile(){
@@ -1952,8 +2002,8 @@ export default {
       let data = JSON.stringify(configFile);
       // console.log('entrance:',this.entranceData)
       let blob = new Blob([data], { type: "application/json" });
-      FileSaver.saveAs(blob, `configFile.json`);
-      // console.log(configFile)
+      // FileSaver.saveAs(blob, `configFile.json`);
+      console.log(configFile)
     },
     isNotEmptyStr(s) {
       if (typeof s == 'string' && s.length > 0) {
@@ -2183,7 +2233,6 @@ export default {
 
       // console.log('entranceData:',this.entranceData)
     },
-
     addColumnSender(tableDataItemKey) {
       // console.log('dddd:',tableDataItemKey)
       const column = { id: uuidv4() }
@@ -2201,6 +2250,33 @@ export default {
 
             ], }
         }
+        else if(this.senderHeader[i].prop=='targetType'){
+          column[this.senderHeader[i].prop] = { value: '', edit: true, "key": [
+              {
+                "value": "选项1",
+                "label": "bson"
+              },
+              {
+                "value": "选项2",
+                "label": "csv"
+              },
+
+            ], }
+        }
+        else if(this.senderHeader[i].prop=='type'){
+          column[this.senderHeader[i].prop] = { value: '', edit: true, "key": [
+              {
+                "value": "选项1",
+                "label": "store"
+              },
+              {
+                "value": "选项2",
+                "label": "req"
+              },
+
+            ], }
+        }
+
         else{column[this.senderHeader[i].prop] = { value: '', edit: true }}
 
 
@@ -2250,6 +2326,7 @@ export default {
         const eachtableDataId = tableData.row.id
         const tableDataItemKey = tableData.tableKey
         for (let i = 0; i < this.tableHeader.length; i++) {
+          console.log('prop：',this.tableHeader[i].prop)
           if (this.tableHeader[i].prop=='parseType'){
             column[this.tableHeader[i].prop] = { key:[{
                 value: '选项1',
@@ -2335,6 +2412,7 @@ export default {
             column[this.tableHeader[i].prop] = { value: '', edit: true }
           }
         }
+        console.log('column:',column)
 
         for (let j = 0; j < this.tableDatas.length; j++) {
           if (this.tableDatas[j].key == tableDataItemKey) {
@@ -2411,6 +2489,7 @@ export default {
                   for (let l = 0; l < this.tableDatas[i].tableData[j].children[k].children.length; l++) {
                     if (this.tableDatas[i].tableData[j].children[k].children[l].id == secondChildId){
                       let delobj = this.tableDatas[i].tableData[j].children[k].children[l].children
+                     console.log(this.tableDatas[i].tableData[j].children[k].children[l].children)
                       for (let m = 0; m < this.tableDatas[i].tableData[j].children[k].children[l].children.length; m++) {
                         if ( this.tableDatas[i].tableData[j].children[k].children[l].children[m].id == currentChildId){
                           for (let n = 0; n < this.tableDatas[i].tableData[j].children[k].children[l].children[m].children.length; n++) {
@@ -2477,6 +2556,7 @@ export default {
     },
     addNextThird(dataObj){
 
+      console.log('parentsRow:',dataObj.tableDataRow,'data',dataObj.data,'currentRow',dataObj.currentRow)
       if (dataObj.currentRow.next.value==true){
         const column = { id: uuidv4(),children:[] }
         const tableDataItemId = dataObj.tableDataRow.id
@@ -2484,6 +2564,7 @@ export default {
         const currentChildId = dataObj.currentRow.id
         const tableDataItemKey = dataObj.key
         for (let i = 0; i < this.tableHeader.length; i++) {
+          console.log('prop：',this.tableHeader[i].prop)
           if (this.tableHeader[i].prop=='parseType'){
             column[this.tableHeader[i].prop] = { key:[{
                 value: '选项1',
@@ -2590,6 +2671,7 @@ export default {
     },
     addNextFourTh(dataObj){
 
+      console.log('parentsRow:',dataObj.tableDataRow,'data2:',dataObj.data2,'data3:',dataObj.data3,'currentRow:',dataObj.currentRow)
 
      if (dataObj.currentRow.next.value==true){
        const column = { id: uuidv4(),children:[] }
@@ -2600,6 +2682,7 @@ export default {
        // const currenChildName = dataObj.currentRow.name
        const tableDataItemKey = dataObj.key
        for (let i = 0; i < this.tableHeader.length; i++) {
+         console.log('prop：',this.tableHeader[i].prop)
          if (this.tableHeader[i].prop=='parseType'){
            column[this.tableHeader[i].prop] = { key:[{
                value: '选项1',
@@ -2952,11 +3035,62 @@ export default {
     testEntranceColum(data){
       console.log(data)
     },
+    changeType(data){
+      const typeValue = data.typeValue
+      const tabaleDataItemKey = data.tableItemKey
+      const currentItemId = data.scope.id
+      const storeArry = [
+        {
+          "value": "选项1",
+          "label": "csv"
+        },
+        {
+          "value": "选项2",
+          "label": "bson"
+        }
+      ]
+      const reqArry = [{
+        value: '选项1',
+        label: 'dom'
+      }, {
+        value: '选项2',
+        label: 'json'
+      },{
+        value: '选项3',
+        label: 'josnp'
+      },{
+        value: '选项4',
+        label: 'original'
+      },]
+      for (let i = 0; i < this.senderData.length; i++) {
+        if (this.senderData[i].key == tabaleDataItemKey){
+          for (let j = 0; j <this.senderData[i].tableData.length ; j++) {
+            if(this.senderData[i].tableData[j].id==currentItemId){
+              if(typeValue=='store'){
+                this.senderData[i].tableData[j].targetType.key=storeArry
+                this.activeValue='bson'
+              }
+              else{
+                this.senderData[i].tableData[j].targetType.key=reqArry
+                this.activeValue='dom'
+              }
+
+            }
+
+          }
+
+        }
+      }
+      console.log(data)
+    },
     subColumnN(tableDataItemKey, tableDataId) {
+      console.log(tableDataItemKey, tableDataId)
       for (let i = 0; i < this.tableDatas.length; i++) {
         if (this.tableDatas[i].key == tableDataItemKey) {
           for (let j = 0; j < this.tableDatas[i].tableData.length; j++) {
             if (this.tableDatas[i].tableData[j].id == tableDataId && this.tableDatas[i].tableData.length > 1) {
+              console.log(this.tableDatas[i].tableData.length)
+              console.log(this.tableDatas[i].tableData)
               this.tableDatas[i].tableData.splice(j, 1)
             }
           }
