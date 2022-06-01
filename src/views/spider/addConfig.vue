@@ -1996,7 +1996,7 @@ export default {
             const typeValue =childArr[j].type.value.toString().trim()
             const targetValue =childArr[j].target.value.toString().trim()
             const targetTypeValue =childArr[j].targetType.value.toString().trim()
-            const parameterValue =childArr[j].parameter.value.toString().trim()
+            // const parameterValue =childArr[j].parameter.value.toString().trim()
             const encodingValue =childArr[j].encoding.value.toString().trim()
             if(this.isNotEmptyStr(sourceValue)==true){
               eachArrObj['source'] = sourceValue
@@ -2013,9 +2013,9 @@ export default {
             if(this.isNotEmptyStr(encodingValue)==true){
               eachArrObj['encoding'] = encodingValue
             }
-            else {
-              eachArrObj['parameter'] = parameterValue
-            }
+            // else {
+            //   eachArrObj['parameter'] = parameterValue
+            // }
             // console.log(eachArrObj)
             configFile['sender'][senderKey].push(eachArrObj)
 
@@ -2036,7 +2036,7 @@ export default {
         FileSaver.saveAs(blob, `configFile.json`);
       }
       // FileSaver.saveAs(blob, `configFile.json`);
-      // console.log('taskName:',configFile.taskName,'type:',typeof(configFile.taskName))
+      console.log(configFile)
     },
     isNotEmptyStr(s) {
       if (typeof s == 'string' && s.length > 0) {
