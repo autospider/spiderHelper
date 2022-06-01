@@ -206,7 +206,7 @@
             <div class="inputDeep" style="width: 165px">
               <el-input
                 v-model="tableDataItem.name"
-                placeholder="stepName"
+                placeholder="entrance"
                 clearable
               >
                 <i
@@ -493,8 +493,9 @@
             <div class="inputDeep" style="width: 165px">
               <el-input
                 v-model="tableDataItem.name"
-                placeholder="actKey"
+                placeholder="entrance"
                 clearable
+                :validate-event="true"
               >
                 <i
                   slot="suffix"
@@ -766,11 +767,11 @@ export default {
         name: { content: 'taskName', show: true },
         value: { content: '', show: true }
       },
-        {
-        name: { content: 'taskGroup', show: true },
-        value: { content: '', show: true }
-
-      },
+      //   {
+      //   name: { content: 'taskGroup', show: true },
+      //   value: { content: '', show: true }
+      //
+      // },
         {
         name: { content: 'taskKey', show: true },
         value: { content: '', show: true }
@@ -1104,11 +1105,12 @@ export default {
           key: '5',
           label: 'targetType',
           prop: 'targetType'
-        },{
-          key: '6',
-          label: 'parameter',
-          prop: 'parameter'
-        },
+        }
+        // ,{
+        //   key: '6',
+        //   label: 'parameter',
+        //   prop: 'parameter'
+        // },
       ],
       senderData:[
         {
@@ -1954,12 +1956,18 @@ export default {
               const key = this.testDatas[i].name.content
               // const value = parseFloat(this.testDatas[i].value.content)
               const value = this.testDatas[i].value.content
-              if(value.indexOf(',')!=-1){
-                configFile[key]=value.split(',').map(Number)
+              if(!this.isNotEmptyStr(value)){
+                configFile[key]=[]
               }
               else{
-                configFile[key]=parseFloat(value)
+                if(value.indexOf(',')!=-1){
+                  configFile[key]=value.split(',').map(Number)
+                }
+                else{
+                  configFile[key]=parseFloat(value)
+                }
               }
+
               // console.log(this.testDatas[i].name.content,':',this.testDatas[i].value.content)
             }
             else {
@@ -2020,11 +2028,18 @@ export default {
         }
 
       }
+
       let data = JSON.stringify(configFile);
       // console.log('entrance:',this.entranceData)
       let blob = new Blob([data], { type: "application/json" });
-      FileSaver.saveAs(blob, `configFile.json`);
-      // console.log(configFile)
+      if(configFile.taskName==undefined||configFile.taskKey==undefined||configFile.resourceKey==undefined){
+        this.$message.error('taskName、taskKey、resourceKey为必填项，请完善之后下载！');
+      }
+      else{
+        FileSaver.saveAs(blob, `configFile.json`);
+      }
+      // FileSaver.saveAs(blob, `configFile.json`);
+      // console.log('taskName:',configFile.taskName,'type:',typeof(configFile.taskName))
     },
     isNotEmptyStr(s) {
       if (typeof s == 'string' && s.length > 0) {
