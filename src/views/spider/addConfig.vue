@@ -731,7 +731,7 @@ export default {
         label: 'json'
       },{
         value: '选项3',
-        label: 'josnp'
+        label: 'jsonp'
       }],
       paramsData: this.$route.params,
       jsonData: [],
@@ -966,7 +966,7 @@ export default {
                   label: 'json'
                 },{
                   value: '选项3',
-                  label: 'josnp'
+                  label: 'jsonp'
                 },{
                   value: '选项4',
                   label: 'original'
@@ -3060,7 +3060,7 @@ export default {
         label: 'json'
       },{
         value: '选项3',
-        label: 'josnp'
+        label: 'jsonp'
       },{
         value: '选项4',
         label: 'original'
