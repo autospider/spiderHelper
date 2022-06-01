@@ -38,24 +38,23 @@
         <span style="font-family:'等线'; text-decoration:underline; color:#0000ff">https://www.w3school.com.cn/html/index.asp</span>
       </a>
     </p>
-    <p style="margin-top:0pt; margin-left:21pt; margin-bottom:0pt; text-align:justify; widows:0; orphans:0; font-size:10.5pt">
+    <p style="margin-top:0pt; margin-left:12pt; margin-bottom:0pt; text-align:justify; widows:0; orphans:0; font-size:10.5pt">
       <span style="width:21pt; display:inline-block">&#xa0;</span>
       <span style="width:21pt; display:inline-block">&#xa0;</span>
       <span style="width:21pt; display:inline-block">&#xa0;</span>
       <span style="font-family:'等线'">json：</span>
-      <span style="font-family:'等线'">
-        </span>
+
       <a href="https://www.w3cschool.cn/json/" style="text-decoration:none">
         <span style="font-family:'等线'; text-decoration:underline; color:#0000ff">https://www.w3cschool.cn/json/</span>
       </a>
     </p>
-    <p style="margin-top:0pt; margin-left:63pt; margin-bottom:0pt; text-indent:21pt; text-align:justify; widows:0; orphans:0; font-size:10.5pt">
+    <p style="margin-top:0pt; margin-left:63pt; margin-bottom:0pt; text-indent:12pt; text-align:justify; widows:0; orphans:0; font-size:10.5pt">
       <span style="font-family:'等线'">xpath：</span>
       <a href="https://www.w3school.com.cn/xpath/index.asp" style="text-decoration:none">
         <span style="font-family:'等线'; text-decoration:underline; color:#0000ff">https://www.w3school.com.cn/xpath/index.asp</span>
       </a>
     </p>
-    <p style="margin-top:0pt; margin-left:63pt; margin-bottom:0pt; text-indent:21pt; text-align:justify; widows:0; orphans:0; font-size:10.5pt">
+    <p style="margin-top:0pt; margin-left:63pt; margin-bottom:0pt; text-indent:12pt; text-align:justify; widows:0; orphans:0; font-size:10.5pt">
       <span style="font-family:'等线'">jsonpath：</span>
       <a href="https://www.bilibili.com/video/BV1Ja411i7tx" style="text-decoration:none">
         <span style="font-family:'等线'; text-decoration:underline; color:#0000ff">https://www.bilibili.com/video/BV1Ja411i7tx</span>
