@@ -206,7 +206,7 @@
             <div class="inputDeep" style="width: 165px">
               <el-input
                 v-model="tableDataItem.name"
-                placeholder="entrance"
+                placeholder="actKey"
                 clearable
               >
                 <i
@@ -493,7 +493,7 @@
             <div class="inputDeep" style="width: 165px">
               <el-input
                 v-model="tableDataItem.name"
-                placeholder="entrance"
+                placeholder="actKey"
                 clearable
                 :validate-event="true"
               >
@@ -1112,7 +1112,7 @@ export default {
       senderData:[
         {
           key: 0,
-          name: '',
+          name: 'entrance',
           tableData: [{
             id: 1,
             source: {
@@ -1166,7 +1166,7 @@ export default {
       tableDatas: [
         {
           key: 0,
-          name: '',
+          name: 'entrance',
           tableData: [{
             id: 1,
             name: {
