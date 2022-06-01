@@ -722,9 +722,6 @@ export default {
       resourceOps:[{
         value: '选项1',
         label: 'proxy'
-      }, {
-        value: '选项2',
-        label: 'null'
       }],
       dateTypeOps:[{
         value: '选项1',
