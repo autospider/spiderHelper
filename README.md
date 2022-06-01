@@ -16,7 +16,7 @@ Freespider 配置模块辅助生成工具
 ### 配置字段说明
 | 字段名 | 说明 | 选项 |默认值|
 | :----: | :----: | :----: | :----: |
-| actKey | 本次请求所响应数据类型 | dom, json, josnp, text ||
+| actKey | 本次请求所响应数据类型 | dom, json, jsonp, text ||
 | encoding | 本次请求所响应数据编码 |  ||
 | isBatch | 批量处理 |  ||
 | task | 列表,包含一组http请求项 |  ||
