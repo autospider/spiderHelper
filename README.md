@@ -9,9 +9,13 @@ Freespider 配置模块辅助生成工具
 - Linux, Windows, macOS
 
 ### 运行方式
+```shell
+cd spiderHelper
 
-`npm install`
-`npm run dev`
+npm install
+
+npm run dev
+```
 
 ### 配置字段说明
 | 字段名 | 说明 | 选项 |默认值|
