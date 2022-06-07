@@ -40,6 +40,7 @@
                          @click="editHandle(scope4.row[item.prop])"/>
                       <!--                  <i v-show="false" style="margin-left:10px" class="el-icon-edit" @click="editHandle(scope.row[item.prop])" v-if="item.prop=='parseType'" />-->
                     </template>
+
                   </el-table-column>
 <!--                  <el-table-column-->
 <!--                    width="50"-->
@@ -71,10 +72,16 @@
                       <el-input v-else v-show="scopeInner.row[item.prop].edit" v-model="scopeInner.row[item.prop].value"
                                 placeholder="请输入内容" @blur="blueHandler(scopeInner.row[item.prop])"/>
                       <span v-if="item.prop!='method'" v-show="!scopeInner.row[item.prop].edit">{{ scopeInner.row[item.prop].value }}</span>
-                      <i  v-if="item.prop!='method'" v-show="!scopeInner.row[item.prop].edit" style="margin-left:10px" class="el-icon-edit"
+                      <i  v-if="(item.prop!='method' && item.prop=='headers')" v-show="!scopeInner.row[item.prop].edit" style="margin-left:10px" class="el-icon-edit"
+                          @click="giveData({data:scopeInner.row[item.prop],title:'添加headers'})"/>
+                      <i  v-else-if="(item.prop!='method' && item.prop=='cookies')" v-show="!scopeInner.row[item.prop].edit" style="margin-left:10px" class="el-icon-edit"
+                          @click="giveData({data:scopeInner.row[item.prop],title:'添加cookies'})"/>
+                      <i  v-else-if="item.prop!='method' && item.prop!='headers'" v-show="!scopeInner.row[item.prop].edit" style="margin-left:10px" class="el-icon-edit"
                          @click="editHandle(scopeInner.row[item.prop])"/>
+
                       <!--                  <i v-show="false" style="margin-left:10px" class="el-icon-edit" @click="editHandle(scope.row[item.prop])" v-if="item.prop=='parseType'" />-->
                     </template>
+
                   </el-table-column>
                   <!--                  <el-table-column-->
                   <!--                    width="50"-->
@@ -116,6 +123,36 @@
 <!--              </template>-->
 <!--            </el-table-column>-->
           </el-table>
+          <el-dialog
+            :title="dialogTitle"
+            :visible.sync="dialogVisible"
+            width="30%"
+            :before-close="handleClose">
+            <el-table :data="cookieArr" border>
+              <el-table-column prop="option" label="操作">
+                <template slot-scope="scope">
+                  <el-button type="primary" icon="el-icon-minus" circle
+                             @click="subHeader(scope.row)"/>
+                  <el-button type="primary" icon="el-icon-plus" circle @click="addHeader(scope.row)"/>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="item in cookieHead" :key="item.key" :prop="item.prop" :label="item.label">
+                <template slot-scope="scope">
+                  <el-input  v-show="scope.row[item.prop].edit" v-model="scope.row[item.prop].value"
+                            placeholder="请输入内容" @blur="blueHandler(scope.row[item.prop])"/>
+                  <span v-show="!scope.row[item.prop].edit" >{{ scope.row[item.prop].value }}</span>
+                  <i v-show="!scope.row[item.prop].edit" style="margin-left:10px" class="el-icon-edit"
+                     @click="editHandle(scope.row[item.prop])"/>
+                  <!--                  <i v-show="false" style="margin-left:10px" class="el-icon-edit" @click="editHandle(scope.row[item.prop])" v-if="item.prop=='parseType'" />-->
+                </template>
+              </el-table-column>
+            </el-table>
+            <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addHeaderData()">添加</el-button>
+
+      </span>
+          </el-dialog>
         </div>
 <!--        <el-table-->
 <!--          :data="entrance"-->
@@ -702,6 +739,9 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 export default {
   data() {
     return {
+      rowData:'',
+      dialogTitle:'',
+      dialogVisible: false,
       activeValue:'请选择',
       activeName: 'first',
       parChildId:{},
@@ -870,6 +910,10 @@ export default {
           key: '3',
           label: 'headers',
           prop: 'headers'
+        },{
+          key: '4',
+          label: 'cookies',
+          prop: 'cookies'
         },
       ],
       tableHeader: [
@@ -910,6 +954,18 @@ export default {
         },
 
       ],
+      cookieArr:  [{
+      id: 1,
+      key: {
+        value: '',
+        edit: false
+      },
+      value: {
+        value: '',
+        edit: false
+      },
+
+    }],
       entranceHeader:[
         {
           key: '1',
@@ -1067,6 +1123,11 @@ export default {
                     value: '',
                     edit: false
                   },
+                  cookies: {
+                    // value: '{ "X-Requested-With": "XMLHttpRequest", "Content-Type": "application/x-www-form-urlencoded"}',
+                    value: '',
+                    edit: false
+                  },
                   },
 
               ],
@@ -1076,6 +1137,18 @@ export default {
               },
             },]
         }
+      ],
+      cookieHead:[
+        {
+          key: '1',
+          label: 'key',
+          prop: 'key'
+        },
+        {
+          key: '2',
+          label: 'value',
+          prop: 'value'
+        },
       ],
       senderHeader: [
         {
@@ -1677,9 +1750,66 @@ export default {
         }
       ]
     }
+
   },
   methods: {
     checkPermission,
+    giveData(data){
+      this.dialogVisible=true
+      this.rowData=data.data
+      this.dialogTitle=data.title
+
+    },
+
+    subHeader(data){
+      for (let i = 0; i < this.cookieArr.length; i++) {
+        if(this.cookieArr[i].id==data.id){
+          this.cookieArr.splice(i, 1)
+        }
+      }
+    },
+    addHeaderData(){
+      const headerObj = {}
+      for (let i = 0; i < this.cookieArr.length; i++) {
+        const key = this.cookieArr[i].key.value
+        const value = this.cookieArr[i].value.value
+        if (this.isNotEmptyStr(key)){
+          headerObj[key] = value
+        }
+
+      }
+      if(JSON.stringify(headerObj)!='{}'){
+        this.rowData.value=JSON.stringify(headerObj)
+        this.rowData.edit=true
+      }
+
+      this.dialogVisible=false
+      this.cookieArr=[{
+        id: uuidv4(),
+        key: {
+          value: '',
+          edit: false
+        },
+        value: {
+          value: '',
+          edit: false
+        },
+
+      }]
+    },
+    addHeader(data) {
+      const column = {id: uuidv4()}
+      for (let i = 0; i < this.cookieHead.length; i++) {
+
+        column[this.cookieHead[i].prop] = {value: '', edit: true}
+
+      }
+
+
+
+      this.cookieArr.push(column)
+
+    },
     editColumn(data){
       console.log('列：',data.col.prop)
       console.log(this.testDatas)
@@ -1746,7 +1876,7 @@ export default {
               const key = this.entranceTaskHead[k].prop
               const value = tableData[i].task[j][key].value
               if (this.isNotEmptyStr(value)==true){
-                if(key=='headers'){
+                if(key=='headers'||key=='cookies'){
                   eachTaskObj['req'][key]=JSON.parse(value)
                 }
                 else {
@@ -2035,8 +2165,8 @@ export default {
       else{
         FileSaver.saveAs(blob, `configFile.json`);
       }
-      // FileSaver.saveAs(blob, `configFile.json`);
-      console.log(configFile)
+      FileSaver.saveAs(blob, `configFile.json`);
+      // console.log(configFile)
     },
     isNotEmptyStr(s) {
       if (typeof s == 'string' && s.length > 0) {
@@ -2244,7 +2374,7 @@ export default {
               }, ] }
           }
           else {
-            column[this.entranceTaskHead[i].prop] = { value: '', edit: true }
+            column[this.entranceTaskHead[i].prop] = { value: '', edit: false }
           }
         }
         for (let i = 0; i < this.entranceData.length; i++) {
